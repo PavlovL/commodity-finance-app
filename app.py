@@ -3,18 +3,28 @@ import pandas as pd
 import json
 import os
 
-DATA_FILE = "data/deals.json"
+# Ensure data directory exists
+DATA_DIR = "data"
+os.makedirs(DATA_DIR, exist_ok=True)
+
+DATA_FILE = os.path.join(DATA_DIR, "deals.json")
 
 st.set_page_config(page_title="Commodity Export Finance Fund", layout="wide")
 st.title("📦 Commodity Export Finance Fund")
 
+# Initialize deals data file
 if not os.path.exists(DATA_FILE):
     with open(DATA_FILE, "w") as f:
         json.dump([], f)
 
+# Load existing deals
 with open(DATA_FILE, "r") as f:
-    deals = json.load(f)
+    try:
+        deals = json.load(f)
+    except json.JSONDecodeError:
+        deals = []
 
+# Sidebar form to add new deals
 st.sidebar.header("Add New Deal")
 with st.sidebar.form("deal_form", clear_on_submit=True):
     name = st.text_input("Deal Name")
@@ -40,6 +50,7 @@ with st.sidebar.form("deal_form", clear_on_submit=True):
             json.dump(deals, f, indent=2)
         st.success("Deal added!")
 
+# Display the deals in a table
 st.subheader("📊 Deal Overview")
 if deals:
     df = pd.DataFrame(deals)
