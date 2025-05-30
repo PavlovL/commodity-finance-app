@@ -3,14 +3,12 @@ import pandas as pd
 import json
 import os
 
-# Ensure data directory exists
+# Define paths
 DATA_DIR = "data"
-os.makedirs(DATA_DIR, exist_ok=True)
-
 DATA_FILE = os.path.join(DATA_DIR, "deals.json")
 
-st.set_page_config(page_title="Commodity Export Finance Fund", layout="wide")
-st.title("📦 Commodity Export Finance Fund")
+# Ensure the data directory exists
+os.makedirs(DATA_DIR, exist_ok=True)
 
 # Initialize deals data file
 if not os.path.exists(DATA_FILE):
@@ -23,6 +21,7 @@ with open(DATA_FILE, "r") as f:
         deals = json.load(f)
     except json.JSONDecodeError:
         deals = []
+
 
 # Sidebar form to add new deals
 st.sidebar.header("Add New Deal")
